@@ -1,0 +1,76 @@
+name: Test
+
+on:
+  pull_request:
+    paths:
+      - action.yml
+      - audit.sh
+
+jobs:
+  pip:
+    name: Test with pip
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        python: [3.7, 3.8]
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python }}
+
+      - run: |
+          pip install -U pipenv
+          pip freeze > requirements.txt
+
+      - uses: ./
+        with:
+          type: pip
+
+  pipenv:
+    name: Test with pipenv
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        python: [3.7, 3.8]
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python }}
+
+      - run: |
+          pip install pipenv
+          pipenv install poetry
+
+      - uses: ./
+        with:
+          type: pipenv
+
+  poetry:
+    name: Test with poetry
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        python: [3.7, 3.8]
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python }}
+
+      - run: |
+          pip install poetry
+          poetry
+            --name pip-audit-action --description test --author homoluctus \
+            --dependency requests --dev-dependencies pytes -l MIT
+
+      - uses: ./
+        with:
+          type: poetry
