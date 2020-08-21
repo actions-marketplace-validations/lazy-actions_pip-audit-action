@@ -1,0 +1,15 @@
+name: pip audit
+author: homoluctus
+description: Audit python dependencies
+inputs:
+  type:
+    description: 'Specify package management tool from pip, pipenv or poetry'
+    required: true
+runs:
+  using: composite
+  steps:
+    - run: $GITHUB_ACTION_PATH/audit.sh ${{ inputs.type }}
+      shell: bash
+branding:
+  icon: eye
+  color: yellow
