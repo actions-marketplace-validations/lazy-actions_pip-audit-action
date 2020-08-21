@@ -67,9 +67,9 @@ jobs:
 
       - run: |
           pip install poetry
-          poetry
+          poetry init \
             --name pip-audit-action --description test --author homoluctus \
-            --dependency requests --dev-dependencies pytes -l MIT
+            --dependency requests --dev-dependency pytes -l MIT
 
       - uses: ./
         with:
